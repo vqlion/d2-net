@@ -7,6 +7,7 @@ import imageio
 import torch
 
 from tqdm import tqdm
+from PIL import Image
 
 import scipy
 import scipy.io
@@ -92,15 +93,19 @@ for line in tqdm(lines, total=len(lines)):
     # TODO: switch to PIL.Image due to deprecation of scipy.misc.imresize.
     resized_image = image
     if max(resized_image.shape) > args.max_edge:
-        resized_image = scipy.misc.imresize(
-            resized_image,
-            args.max_edge / max(resized_image.shape)
-        ).astype('float')
+        # resized_image = scipy.misc.imresize(
+        #     resized_image,
+        #     args.max_edge / max(resized_image.shape)
+        # ).astype('float')
+        resized_image = np.array(Image.fromarray(resized_image).resize(
+            (args.max_edge / max(resized_image.shape)), Image.BILINEAR)).astype('float')
     if sum(resized_image.shape[: 2]) > args.max_sum_edges:
-        resized_image = scipy.misc.imresize(
-            resized_image,
-            args.max_sum_edges / sum(resized_image.shape[: 2])
-        ).astype('float')
+        # resized_image = scipy.misc.imresize(
+        #     resized_image,
+        #     args.max_sum_edges / sum(resized_image.shape[: 2])
+        # ).astype('float')
+        resized_image = np.array(Image.fromarray(resized_image).resize(
+            args.max_sum_edges / sum(resized_image.shape[: 2]), Image.BILINEAR)).astype('float')
 
     fact_i = image.shape[0] / resized_image.shape[0]
     fact_j = image.shape[1] / resized_image.shape[1]

@@ -138,6 +138,7 @@ for line in tqdm(lines, total=len(lines)):
     keypoints[:, 1] *= fact_j
     # i, j -> u, v
     keypoints = keypoints[:, [1, 0, 2]]
+    keypoints = [x[:-1] for x in keypoints]
 
     if args.output_type == 'npz':
         with open(path + args.output_extension, 'wb') as output_file:

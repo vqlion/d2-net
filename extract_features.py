@@ -92,20 +92,21 @@ for line in tqdm(lines, total=len(lines)):
 
     # TODO: switch to PIL.Image due to deprecation of scipy.misc.imresize.
     resized_image = image
+    print(resized_image.shape)
     if max(resized_image.shape) > args.max_edge:
-        # resized_image = scipy.misc.imresize(
-        #     resized_image,
-        #     args.max_edge / max(resized_image.shape)
-        # ).astype('float')
+    #     # resized_image = scipy.misc.imresize(
+    #     #     resized_image,
+    #     #     args.max_edge / max(resized_image.shape)
+    #     # ).astype('float')
         resized_image = np.array(Image.fromarray(resized_image).resize(
-            (args.max_edge / max(resized_image.shape)), Image.BILINEAR)).astype('float')
+            (int(resized_image.shape[0]*(args.max_edge / max(resized_image.shape))), int(resized_image.shape[1]*(args.max_edge / max(resized_image.shape)))), Image.BILINEAR)).astype('float')
     if sum(resized_image.shape[: 2]) > args.max_sum_edges:
-        # resized_image = scipy.misc.imresize(
-        #     resized_image,
-        #     args.max_sum_edges / sum(resized_image.shape[: 2])
-        # ).astype('float')
+    #     # resized_image = scipy.misc.imresize(
+    #     #     resized_image,
+    #     #     args.max_sum_edges / sum(resized_image.shape[: 2])
+    #     # ).astype('float')
         resized_image = np.array(Image.fromarray(resized_image).resize(
-            args.max_sum_edges / sum(resized_image.shape[: 2]), Image.BILINEAR)).astype('float')
+            (int(resized_image.shape[0]*(args.max_sum_edges / sum(resized_image.shape[: 2]))), int(resized_image.shape[1]*(args.max_sum_edges / sum(resized_image.shape[: 2])))), Image.BILINEAR)).astype('float')
 
     fact_i = image.shape[0] / resized_image.shape[0]
     fact_j = image.shape[1] / resized_image.shape[1]
